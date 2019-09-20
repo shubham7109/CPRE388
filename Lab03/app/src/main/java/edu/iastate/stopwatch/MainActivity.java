@@ -21,11 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private Button stopButton;
     private Button resetButton;
     private Button startButton;
-    private Handler handler;
-    private long TIME_START;
-    private long CUR_TIME;
-    private long ELAPSED_TIME;
-    private boolean shouldThreadRun;
+    private StopwatchModel stopwatchModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initViews();
+        stopwatchModel = new StopwatchModel(this);
 
     }
 
@@ -44,50 +42,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartClicked(View view) {
-        shouldThreadRun = true;
-        startThread();
-        setButtonVisibility(shouldThreadRun);
+        stopwatchModel.startThread();
+        setButtonVisibility(true);
 
     }
 
     public void onResetClicked(View view) {
-        shouldThreadRun = false;
+        stopwatchModel.resetVals();
         timerDisplay.setText(TIMER_DEFAULT_TEXT);
-        TIME_START = 0;
-        CUR_TIME = 0;
-        ELAPSED_TIME = 0;
 
         setButtonVisibility(false);
     }
 
     public void onStopClicked(View view) {
-        shouldThreadRun = false;
-        CUR_TIME = ELAPSED_TIME;
-
+        stopwatchModel.handleStop();
         setButtonVisibility(false);
     }
 
-    private void startThread(){
-        handler = new Handler();
 
-        TIME_START = System.currentTimeMillis();
-
-        final Runnable r = new Runnable() {
-            public void run() {
-
-                if(shouldThreadRun){
-
-                    ELAPSED_TIME = (System.currentTimeMillis() - TIME_START) + CUR_TIME;
-                    timerDisplay.setText(convertToString(ELAPSED_TIME));
-
-                    handler.postDelayed(this, 10);
-                }
-
-            }
-        };
-
-        handler.postDelayed(r, 10);
-    }
 
     private void setButtonVisibility(boolean isRunning){
         if(isRunning){
@@ -101,17 +73,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private String convertToString(long millis){
-
-        Date date = new Date(millis);
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat formatter= new SimpleDateFormat("HH:mm:ss.S");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-
-        return formatter.format(date);
-
-
+    public void setDisplay(String displayText){
+        timerDisplay.setText(displayText);
     }
+
 }
