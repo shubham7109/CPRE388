@@ -24,25 +24,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO - uncomment below after layout has been made.
-        // Locate the instance of the calculator display TextView.  Don't forget to set the ID in the layout file.
         mCalculatorDisplay = findViewById(R.id.CalculatorDisplay);
 
     }
 
-    // TODO - add event listeners for your calculator's buttons. See the model's API to figure out
-    // what methods should be called. The equals button event listener has been done for you. Once
-    // you've created the layout, you'll need to add these methods as the onClick() listeners
-    // for the corresponding buttons in the XML layout.
-
     public void onEqualClicked(View view) {
         try {
             mCalculationStream.calculateResult();
-        } finally {
+        } catch (Exception e){
+            mCalculationStream.clear();
+        }finally {
             updateCalculatorDisplay();
         }
     }
 
+    /**
+     * Called when the digit button is clicked
+     * @param view textView
+     */
     public void onDigitClicked(View view) {
         try {
 
@@ -84,11 +83,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
             }
+        } catch (Exception e){
+            mCalculationStream.clear();
         } finally {
             updateCalculatorDisplay();
         }
     }
 
+    /**
+     * Called when the a operand button is clicked
+     * @param view textView
+     */
     public void onOperandClicked(View view){
 
         try{
@@ -110,11 +115,17 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
             }
+        }  catch (Exception e){
+            mCalculationStream.clear();
         } finally {
             updateCalculatorDisplay();
         }
     }
 
+    /**
+     * Called when the clear button is clicked
+     * @param view textView
+     */
     public void onClearClicked(View view){
         try{
             mCalculationStream.clear();
@@ -137,6 +148,4 @@ public class MainActivity extends AppCompatActivity {
             mCalculatorDisplay.setText(value);
         }
     }
-
-    //TODO - any other methods you want to use related to the UI
 }
