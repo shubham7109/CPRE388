@@ -8,15 +8,17 @@ public class CarbonDiary {
     private double avgCarbon = 0;
     private int numDays =0;
 
-    public void addEntry(String type, double amount) {
+    public CarbonDiaryEntry addEntry(String type, double amount) {
         CarbonDiaryEntry entry = new CarbonDiaryEntry(type, amount);
         mEntries.add(entry);
         mTotalCarbon += entry.getCarbon();
+        return entry;
     }
 
-    public void removeEntry(CarbonDiaryEntry entry) {
+    public CarbonDiaryEntry removeEntry(CarbonDiaryEntry entry) {
         mTotalCarbon -= entry.getCarbon();
         mEntries.remove(entry);
+        return entry;
     }
 
     public ArrayList<CarbonDiaryEntry> getEntries() {

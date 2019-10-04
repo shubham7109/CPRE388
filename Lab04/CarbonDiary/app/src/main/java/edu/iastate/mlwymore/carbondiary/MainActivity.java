@@ -43,9 +43,10 @@ public class MainActivity extends AppCompatActivity
 
         carbonDiaryViewModel = new ViewModelProvider(this,
                 new ViewModelProvider.NewInstanceFactory()).get(CarbonDiaryViewModel.class);
-        carbonDiaryViewModel.carbonDiary.observe(this, this);
+        //carbonDiaryViewModel.carbonDiary.observe(this, this);
 
         retrieveEnrties(savedInstanceState);
+        updateText();
 
         Spinner typeSpinner = findViewById(R.id.new_entry_type);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
@@ -80,8 +81,12 @@ public class MainActivity extends AppCompatActivity
             Gson gson = new Gson();
             String json = preferences.getString("carbonDiary", "noDataFound");
             if(!json.equals("noDataFound")){
-                CarbonDiary carbonDiary = gson.fromJson(json, CarbonDiary.class);
-                carbonDiaryViewModel.carbonDiary.setValue(carbonDiary);
+                carbonDiaryViewModel.carbonDiary = gson.fromJson(json, CarbonDiary.class);
+                //carbonDiaryViewModel.carbonDiary.setValue(carbonDiary);
+
+                for(CarbonDiaryEntry entry : carbonDiaryViewModel.carbonDiary.getEntries()){
+                    addEntryToTable(entry);
+                }
             }
 
         }
@@ -91,7 +96,8 @@ public class MainActivity extends AppCompatActivity
     public void onStop() {
 
         //Add the entries to sharedprefs
-        CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary.getValue();
+        //CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary.getValue();
+        CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary;
         SharedPreferences.Editor prefsEditor = preferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(carbonDiary);
@@ -102,58 +108,73 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void addEntry(View view) {
-        carbonDiaryViewModel.addEntry(newEntryType, newEntryAmount);
+        CarbonDiaryEntry entry = carbonDiaryViewModel.addEntry(newEntryType, newEntryAmount);
+        addEntryToTable(entry);
+    }
+
+    private void addEntryToTable(CarbonDiaryEntry entry) {
+        final TableLayout table = findViewById(R.id.diary_table);
+
+        final TableRow row = new TableRow(this);
+        TextView name = new TextView(this);
+        name.setText(getString(R.string.entry_name_display, entry.getType(),
+                entry.getAmount(), CarbonDiaryEntry.getUnitForType(entry.getType())));
+        name.setTextSize(20);
+        name.setPadding(0, 0, 30, 0);
+        TextView carbon = new TextView(this);
+        carbon.setText(getString(R.string.entry_carbon_display, entry.getCarbon()));
+        carbon.setTextSize(20);
+        carbon.setPadding(0, 0, 30, 0);
+        Button removeButton = new Button(this);
+        removeButton.setText(R.string.remove_button);
+        removeButton.setTag(entry);
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                carbonDiaryViewModel.removeEntry((CarbonDiaryEntry)view.getTag());
+                table.removeView(row);
+                updateText();
+            }
+        });
+        row.addView(name);
+        row.addView(carbon);
+        row.addView(removeButton);
+
+        table.addView(row);
+        updateText();
     }
 
     public void newDay(View view) {
-        CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary.getValue();
+        //CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary.getValue();
+        CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary;
         if(carbonDiary.getEntries().size() == 0){
             Toast.makeText(this, "No entries added to the day!", Toast.LENGTH_SHORT).show();
         }else{
             carbonDiary.updateNewDay();
             carbonDiary.clearEntries();
-            carbonDiaryViewModel.carbonDiary.setValue(carbonDiary);
+            //carbonDiaryViewModel.carbonDiary.setValue(carbonDiary);
+            carbonDiaryViewModel.carbonDiary = carbonDiary;
+
+            TableLayout table = findViewById(R.id.diary_table);
+            table.removeAllViews();
+            updateText();
+
         }
 
 
     }
 
+    public void updateText(){
+        TextView todayCarbon = findViewById(R.id.today_carbon);
+        todayCarbon.setText(getString(R.string.today_carbon, carbonDiaryViewModel.carbonDiary.getTotalCarbon()));
+        TextView averageCarbon = findViewById(R.id.average_carbon);
+        averageCarbon.setText(getString(R.string.average_carbon, carbonDiaryViewModel.carbonDiary.getDailyAvg()));
+    }
+
+
     @Override
     public void onChanged(CarbonDiary carbonDiary) {
-        TableLayout table = findViewById(R.id.diary_table);
-        table.removeAllViews();
 
-        for(CarbonDiaryEntry entry : carbonDiary.getEntries()) {
-            TableRow row = new TableRow(this);
-            TextView name = new TextView(this);
-            name.setText(getString(R.string.entry_name_display, entry.getType(),
-                    entry.getAmount(), CarbonDiaryEntry.getUnitForType(entry.getType())));
-            name.setTextSize(20);
-            name.setPadding(0, 0, 30, 0);
-            TextView carbon = new TextView(this);
-            carbon.setText(getString(R.string.entry_carbon_display, entry.getCarbon()));
-            carbon.setTextSize(20);
-            carbon.setPadding(0, 0, 30, 0);
-            Button removeButton = new Button(this);
-            removeButton.setText(R.string.remove_button);
-            removeButton.setTag(entry);
-            removeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    carbonDiaryViewModel.removeEntry((CarbonDiaryEntry)view.getTag());
-                }
-            });
-            row.addView(name);
-            row.addView(carbon);
-            row.addView(removeButton);
-
-            table.addView(row);
-        }
-
-        TextView todayCarbon = findViewById(R.id.today_carbon);
-        todayCarbon.setText(getString(R.string.today_carbon, carbonDiary.getTotalCarbon()));
-        TextView averageCarbon = findViewById(R.id.average_carbon);
-        averageCarbon.setText(getString(R.string.average_carbon, carbonDiary.getDailyAvg()));
     }
 
     @Override
