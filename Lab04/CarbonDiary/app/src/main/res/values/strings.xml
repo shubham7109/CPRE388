@@ -9,5 +9,6 @@
 
     <string name="remove_button">Remove</string>
     <string name="add_button">Add Entry</string>
+    <string name="new_day_button">New Day</string>
     <string name="new_entry_amount">10.7</string>
 </resources>

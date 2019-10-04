@@ -64,6 +64,7 @@
                 android:onClick="addEntry"
                 android:text="@string/add_button" />
 
+
             <Spinner
                 android:id="@+id/new_entry_type"
                 android:layout_width="wrap_content"
@@ -87,6 +88,23 @@
                 tools:text="unit" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="#4CAF50"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/new_day"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="newDay"
+                android:text="@string/new_day_button" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

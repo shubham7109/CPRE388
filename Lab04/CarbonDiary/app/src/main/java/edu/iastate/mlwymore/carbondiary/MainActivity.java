@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,11 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements Observer<CarbonDiary>, AdapterView.OnItemSelectedListener {
@@ -26,15 +32,20 @@ public class MainActivity extends AppCompatActivity
     private CarbonDiaryViewModel carbonDiaryViewModel;
     private String newEntryType = "";
     private double newEntryAmount = 0.0;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        preferences = getPreferences(MODE_PRIVATE);
+
         carbonDiaryViewModel = new ViewModelProvider(this,
                 new ViewModelProvider.NewInstanceFactory()).get(CarbonDiaryViewModel.class);
         carbonDiaryViewModel.carbonDiary.observe(this, this);
+
+        retrieveEnrties(savedInstanceState);
 
         Spinner typeSpinner = findViewById(R.id.new_entry_type);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
@@ -63,8 +74,48 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    private void retrieveEnrties(Bundle savedInstanceState) {
+        //Add stored sharedprefs to the ViewModel!
+        if(savedInstanceState == null){
+            Gson gson = new Gson();
+            String json = preferences.getString("carbonDiary", "noDataFound");
+            if(!json.equals("noDataFound")){
+                CarbonDiary carbonDiary = gson.fromJson(json, CarbonDiary.class);
+                carbonDiaryViewModel.carbonDiary.setValue(carbonDiary);
+            }
+
+        }
+    }
+
+    @Override
+    public void onStop() {
+
+        //Add the entries to sharedprefs
+        CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary.getValue();
+        SharedPreferences.Editor prefsEditor = preferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(carbonDiary);
+        prefsEditor.putString("carbonDiary", json);
+        prefsEditor.commit();
+
+        super.onStop();
+    }
+
     public void addEntry(View view) {
         carbonDiaryViewModel.addEntry(newEntryType, newEntryAmount);
+    }
+
+    public void newDay(View view) {
+        CarbonDiary carbonDiary = carbonDiaryViewModel.carbonDiary.getValue();
+        if(carbonDiary.getEntries().size() == 0){
+            Toast.makeText(this, "No entries added to the day!", Toast.LENGTH_SHORT).show();
+        }else{
+            carbonDiary.updateNewDay();
+            carbonDiary.clearEntries();
+            carbonDiaryViewModel.carbonDiary.setValue(carbonDiary);
+        }
+
+
     }
 
     @Override
@@ -102,7 +153,7 @@ public class MainActivity extends AppCompatActivity
         TextView todayCarbon = findViewById(R.id.today_carbon);
         todayCarbon.setText(getString(R.string.today_carbon, carbonDiary.getTotalCarbon()));
         TextView averageCarbon = findViewById(R.id.average_carbon);
-        averageCarbon.setText(getString(R.string.average_carbon, 0.0));
+        averageCarbon.setText(getString(R.string.average_carbon, carbonDiary.getDailyAvg()));
     }
 
     @Override

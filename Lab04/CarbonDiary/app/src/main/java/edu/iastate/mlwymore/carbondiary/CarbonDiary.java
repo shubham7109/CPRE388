@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class CarbonDiary {
     private ArrayList<CarbonDiaryEntry> mEntries = new ArrayList<>();
     private double mTotalCarbon = 0.0;
+    private double avgCarbon = 0;
+    private int numDays =0;
 
     public void addEntry(String type, double amount) {
         CarbonDiaryEntry entry = new CarbonDiaryEntry(type, amount);
@@ -23,5 +25,18 @@ public class CarbonDiary {
 
     public double getTotalCarbon() {
         return mTotalCarbon;
+    }
+
+    public void updateNewDay(){
+        avgCarbon = ((avgCarbon*numDays) + mTotalCarbon)/(++numDays);
+    }
+
+    public double getDailyAvg(){
+        return avgCarbon;
+    }
+
+    public void clearEntries(){
+        mTotalCarbon = 0;
+        mEntries.clear();
     }
 }
