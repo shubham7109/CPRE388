@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">CarbonDiary</string>
+
+    <string name="average_carbon">DAILY: %1$.2f kg</string>
+    <string name="today_carbon">TODAY: %1$.2f kg</string>
+
+    <string name="entry_name_display">%1$s (%2$.2f %3$s)</string>
+    <string name="entry_carbon_display">%1$.2f kg</string>
+
+    <string name="remove_button">Remove</string>
+    <string name="add_button">Add Entry</string>
+    <string name="new_entry_amount">10.7</string>
+</resources>
