@@ -10,10 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:configChanges="orientation|screenSize"
             android:name=".Controllers.ShoppingItemsActivity"
             android:label="@string/title_activity_shopping_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Controllers.ShoppingListsActivity">
+        <activity android:name=".Controllers.ShoppingListsActivity" android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

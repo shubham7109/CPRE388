@@ -100,9 +100,16 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                addNewItemToRealm(input.getText().toString());
-                dialog.dismiss();
-                isDialogOpen = false;
+                if(!input.getText().toString().trim().equals("")){
+                    addNewItemToRealm(input.getText().toString());
+                    dialog.dismiss();
+                    isDialogOpen = false;
+                }else{
+                    Toast.makeText(ShoppingListsActivity.this, "Cannot add empty item", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    isDialogOpen = false;
+                }
+
             }
         });
         builder.setNegativeButton("Go Back", new DialogInterface.OnClickListener() {
@@ -185,16 +192,21 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
-                realm.beginTransaction();
-                shoppingListModel.setTitle(input.getText().toString());
-                realm.commitTransaction();
 
-                buildShoppingLists();
+                if(!input.getText().toString().trim().equals("")){
+                    ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
+                    realm.beginTransaction();
+                    shoppingListModel.setTitle(input.getText().toString());
+                    realm.commitTransaction();
+                    buildShoppingLists();
+                    dialog.dismiss();
+                    isDialogOpen = false;
+                }else{
+                    Toast.makeText(ShoppingListsActivity.this, "Cannot add empty item", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    isDialogOpen = false;
+                }
 
-
-                dialog.dismiss();
-                isDialogOpen = false;
             }
         });
         builder.setNegativeButton("Go Back", new DialogInterface.OnClickListener() {
