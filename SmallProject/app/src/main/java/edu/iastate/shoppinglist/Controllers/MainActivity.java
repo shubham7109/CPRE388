@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -53,24 +54,28 @@ public class MainActivity extends AppCompatActivity implements ShoppingListsAdap
         }
     }
 
+    /**
+     * Rebuilds the shopping list recyclerView
+     * every time it needs to be updated
+     */
     private void buildShoppingLists() {
 
         RealmResults<ShoppingListModel> shoppingListModels = realm.where(ShoppingListModel.class).findAll();
 
+        list.clear();
         list.addAll(realm.copyFromRealm(shoppingListModels));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ShoppingListsAdapter(this, list);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-
     }
 
     /**
      * This displays the view when there is no shopping list
      */
     private void handleNoShoppingLists() {
-        Toast.makeText(this, "no list", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "No Lists Added", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -129,7 +134,39 @@ public class MainActivity extends AppCompatActivity implements ShoppingListsAdap
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onOpenListClick(int position) {
+        ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
+
+        Intent intent = new Intent(this, ShoppingListActivity.class);
+        intent.putExtra("id", shoppingListModel.getId());
+        this.startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteListClick(int position) {
+
+        RealmResults<ShoppingListModel> shoppingListModels = realm.where(ShoppingListModel.class).findAll();
+        realm.beginTransaction();
+        shoppingListModels.deleteFromRealm(position);
+        realm.commitTransaction();
+
+        buildShoppingLists();
+
+
+    }
+
+    @Override
+    public void onDuplicateListClick(int position) {
+
+        ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
+        ShoppingListModel shoppingListModel_duplicate = new ShoppingListModel(shoppingListModel.getTitle());
+        shoppingListModel_duplicate.setItems(shoppingListModel.getItems());
+
+        realm.beginTransaction();
+        realm.insertOrUpdate(shoppingListModel_duplicate);
+        realm.commitTransaction();
+
+        buildShoppingLists();
 
     }
 }

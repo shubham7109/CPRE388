@@ -1,14 +1,17 @@
 package edu.iastate.shoppinglist.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class ShoppingListModel extends RealmObject {
+public class ShoppingListModel extends RealmObject implements Serializable {
 
     @PrimaryKey
+    private long id;
+
     private String title;
 
     private RealmList<String> items;
@@ -18,6 +21,7 @@ public class ShoppingListModel extends RealmObject {
      * @param title Title of the shopping list
      */
     public ShoppingListModel(String title) {
+        id = System.currentTimeMillis();
         this.title = title;
     }
 
@@ -26,6 +30,10 @@ public class ShoppingListModel extends RealmObject {
      */
     public ShoppingListModel(){
 
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getTitle() {

@@ -9,26 +9,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.Toast;
 
+import edu.iastate.shoppinglist.Models.ShoppingListModel;
 import edu.iastate.shoppinglist.R;
+import io.realm.Realm;
 
 public class ShoppingListActivity extends AppCompatActivity {
+
+    private ShoppingListModel shoppingListModel;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        realm = Realm.getDefaultInstance();
+        Long id = getIntent().getLongExtra("id",0);
+        shoppingListModel = realm.where(ShoppingListModel.class).equalTo("id", id).findFirst();
+
+        if(shoppingListModel == null){
+            Toast.makeText(this, "Error finding shopping list", Toast.LENGTH_SHORT).show();
+            return;
+        }else{
+            Toast.makeText(this, shoppingListModel.getTitle(), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
 }

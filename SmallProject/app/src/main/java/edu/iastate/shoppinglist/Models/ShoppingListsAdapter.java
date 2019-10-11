@@ -44,20 +44,49 @@ public class ShoppingListsAdapter extends RecyclerView.Adapter<ShoppingListsAdap
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         Button openBtn;
+        Button deleteBtn;
+        Button duplicateBtn;
         TextView titleTv;
 
         ViewHolder(View itemView) {
             super(itemView);
             openBtn = itemView.findViewById(R.id.view_button);
+            deleteBtn = itemView.findViewById(R.id.delete_button);
+            duplicateBtn = itemView.findViewById(R.id.duplicate_button);
             titleTv = itemView.findViewById(R.id.title);
-            itemView.setOnClickListener(this);
+
+            openBtn.setOnClickListener(handleOpen());
+            deleteBtn.setOnClickListener(handleDelete());
+            duplicateBtn.setOnClickListener(handleDuplicate());
         }
 
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        private View.OnClickListener handleOpen(){
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mClickListener != null) mClickListener.onOpenListClick(getAdapterPosition());
+                }
+            };
+        }
+
+        private View.OnClickListener handleDelete(){
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mClickListener != null) mClickListener.onDeleteListClick(getAdapterPosition());
+                }
+            };
+        }
+
+        private View.OnClickListener handleDuplicate(){
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mClickListener != null) mClickListener.onDuplicateListClick(getAdapterPosition());
+                }
+            };
         }
     }
 
@@ -69,7 +98,13 @@ public class ShoppingListsAdapter extends RecyclerView.Adapter<ShoppingListsAdap
         this.mClickListener = itemClickListener;
     }
 
+    /**
+     * Interface for callback to the main activity
+     * so that open, delete and duplicate is handled there.
+     */
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onOpenListClick(int position);
+        void onDeleteListClick(int position);
+        void onDuplicateListClick(int position);
     }
 }
