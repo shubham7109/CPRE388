@@ -20,6 +20,11 @@ import edu.iastate.shoppinglist.R;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+/**
+ * This is the main activity for the app,
+ * It implements the click listener when a shopping list is clicked.
+ * @author Shubham Sharma
+ */
 public class ShoppingListsActivity extends AppCompatActivity implements ShoppingListsAdapter.ItemClickListener{
 
     private Realm realm;
@@ -36,13 +41,11 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
         recyclerView = findViewById(R.id.rv);
         list = new ArrayList<>();
 
-        // Initialize Realm (just once per application)
+        // Initialize Realm
         Realm.init(this);
-
-        // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
 
-        //Find all the stores shopping lists
+        //Find all the stored shopping lists
         RealmResults<ShoppingListModel> shoppingListActivities = realm.where(ShoppingListModel.class).findAll();
 
         if(shoppingListActivities.size() == 0){
@@ -70,14 +73,14 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
     }
 
     /**
-     * This displays the view when there is no shopping list
+     * This displays the Toast when there is no shopping list
      */
     private void handleNoShoppingLists() {
         Toast.makeText(this, "No Lists Added", Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * Click listener for button
+     * Click listener for add new list
      * @param view The button view object
      */
     public void addNew(View view) {
@@ -138,6 +141,11 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
         buildShoppingLists();
     }
 
+    /**
+     * Handles when open list is clicked
+     * Opens a new activity.
+     * @param position Position of the item in the list
+     */
     @Override
     public void onOpenListClick(int position) {
         ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
@@ -147,6 +155,11 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
         this.startActivity(intent);
     }
 
+    /**
+     * Handles when delete list is clicked
+     * Deletes the list from Realm data
+     * @param position Position of the item in the list
+     */
     @Override
     public void onDeleteListClick(int position) {
 
@@ -160,6 +173,11 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
 
     }
 
+    /**
+     * Handles when the duplicate list is clicked
+     * Duplicates the list in the Realm data
+     * @param position Position of the item in the list
+     */
     @Override
     public void onDuplicateListClick(int position) {
 
@@ -175,6 +193,11 @@ public class ShoppingListsActivity extends AppCompatActivity implements Shopping
 
     }
 
+    /**
+     * Handles when the rename list is called
+     * Open a dialog to rename the list within the Realm data
+     * @param position Position of the item in the list
+     */
     @Override
     public void onRenameListClick(final int position) {
 

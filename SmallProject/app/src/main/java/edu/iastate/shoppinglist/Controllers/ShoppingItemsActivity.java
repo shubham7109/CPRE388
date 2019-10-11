@@ -27,6 +27,11 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
+/**
+ * Shopping list activity. This is created when a shopping list is opened.
+ * It implements the click listener when a list item is clicked.
+ * @author Shubham Sharma
+ */
 public class ShoppingItemsActivity extends AppCompatActivity implements ShoppingItemsAdapter.ItemClickListener {
 
     private ShoppingListModel shoppingListModel;
@@ -62,6 +67,10 @@ public class ShoppingItemsActivity extends AppCompatActivity implements Shopping
 
     }
 
+    /**
+     * Called when there are items in the list to build.
+     * Populates the Recycler view
+     */
     private void buildView() {
 
         items.clear();
@@ -77,6 +86,11 @@ public class ShoppingItemsActivity extends AppCompatActivity implements Shopping
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Handles when remove item is clicked
+     * Updates the item information within realm
+     * @param position Position of the item clicked.
+     */
     @Override
     public void onRemoveClick(int position) {
         String item = items.get(position);
@@ -90,13 +104,19 @@ public class ShoppingItemsActivity extends AppCompatActivity implements Shopping
         buildView();
     }
 
+    /**
+     * Handles when add item is clicked
+     * Open a dialog for user to enter item.
+     * @param view Button object instance
+     */
     public void onAddItemClick(View view) {
         if(!isDialogOpen)
             openDialog();
     }
 
     /**
-     * Open a dialog to create a new list.
+     * Open a dialog to add item to the list
+     * Will handle adding it to the Realm data.
      */
     private void openDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -135,6 +155,11 @@ public class ShoppingItemsActivity extends AppCompatActivity implements Shopping
         isDialogOpen = true;
     }
 
+    /**
+     * Updates the realm data to add the item to realm
+     * Once completed the rv is then updated
+     * @param item String value of the item to be added to the shopping list
+     */
     private void addNewItemToRealm(String item) {
         items.add(item);
 
