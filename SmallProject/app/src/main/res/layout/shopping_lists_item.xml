@@ -26,8 +26,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:paddingBottom="5dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp">
 
             <Button
                 android:id="@+id/delete_button"
@@ -36,9 +36,9 @@
                 android:text="Delete List"
                 android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/duplicate_button"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/duplicate_button"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
@@ -48,9 +48,9 @@
                 android:text="Duplicate List"
                 android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/delete_button"
+                app:layout_constraintEnd_toStartOf="@+id/view_button"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/view_button"
+                app:layout_constraintStart_toEndOf="@+id/delete_button"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
@@ -60,9 +60,20 @@
                 android:text="Open List"
                 android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/duplicate_button"
+                app:layout_constraintEnd_toStartOf="@+id/rename_button"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/duplicate_button"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/rename_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rename List"
+                android:textAllCaps="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/view_button"
                 app:layout_constraintTop_toTopOf="parent" />
 
 

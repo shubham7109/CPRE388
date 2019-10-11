@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,7 +20,7 @@ import edu.iastate.shoppinglist.R;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements ShoppingListsAdapter.ItemClickListener{
+public class ShoppingListsActivity extends AppCompatActivity implements ShoppingListsAdapter.ItemClickListener{
 
     private Realm realm;
     private boolean isDialogOpen = false;
@@ -137,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements ShoppingListsAdap
     public void onOpenListClick(int position) {
         ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
 
-        Intent intent = new Intent(this, ShoppingListActivity.class);
+        Intent intent = new Intent(this, ShoppingItemsActivity.class);
         intent.putExtra("id", shoppingListModel.getId());
         this.startActivity(intent);
     }
@@ -167,6 +165,49 @@ public class MainActivity extends AppCompatActivity implements ShoppingListsAdap
         realm.commitTransaction();
 
         buildShoppingLists();
+
+    }
+
+    @Override
+    public void onRenameListClick(final int position) {
+
+
+        final ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Title Name");
+
+        final EditText input = new EditText(this);
+        input.setText(shoppingListModel.getTitle());
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                ShoppingListModel shoppingListModel = realm.where(ShoppingListModel.class).findAll().get(position);
+                realm.beginTransaction();
+                shoppingListModel.setTitle(input.getText().toString());
+                realm.commitTransaction();
+
+                buildShoppingLists();
+
+
+                dialog.dismiss();
+                isDialogOpen = false;
+            }
+        });
+        builder.setNegativeButton("Go Back", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                isDialogOpen = false;
+            }
+        });
+
+        //Open dialog
+        builder.show();
+        isDialogOpen = true;
 
     }
 }

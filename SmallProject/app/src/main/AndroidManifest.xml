@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Controllers.ShoppingListActivity"
+            android:name=".Controllers.ShoppingItemsActivity"
             android:label="@string/title_activity_shopping_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Controllers.MainActivity">
+        <activity android:name=".Controllers.ShoppingListsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

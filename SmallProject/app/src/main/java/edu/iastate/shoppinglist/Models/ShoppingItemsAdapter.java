@@ -12,35 +12,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import edu.iastate.shoppinglist.R;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
-public class ShoppingListsAdapter extends RecyclerView.Adapter<ShoppingListsAdapter.ViewHolder> {
+public class ShoppingItemsAdapter extends RecyclerView.Adapter<ShoppingItemsAdapter.ViewHolder> {
 
-    private ArrayList<ShoppingListModel> shoppingLists;
+    private ArrayList<String> items;
     private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
+    private ShoppingItemsAdapter.ItemClickListener mClickListener;
 
-    public ShoppingListsAdapter(Context context, ArrayList<ShoppingListModel> data) {
+    public ShoppingItemsAdapter(Context context, ArrayList<String> data) {
         this.mInflater = LayoutInflater.from(context);
-        this.shoppingLists = data;
+        this.items = data;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.shopping_lists_item, parent, false);
-        return new ViewHolder(view);
+        return new ShoppingItemsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String title = shoppingLists.get(position).getTitle();
+        String title = items.get(position);
         holder.titleTv.setText(title);
     }
 
     @Override
     public int getItemCount() {
-        return shoppingLists.size();
+        return items.size();
     }
 
 
@@ -48,7 +46,6 @@ public class ShoppingListsAdapter extends RecyclerView.Adapter<ShoppingListsAdap
         Button openBtn;
         Button deleteBtn;
         Button duplicateBtn;
-        Button renameBtn;
         TextView titleTv;
 
         ViewHolder(View itemView) {
@@ -56,47 +53,39 @@ public class ShoppingListsAdapter extends RecyclerView.Adapter<ShoppingListsAdap
             openBtn = itemView.findViewById(R.id.view_button);
             deleteBtn = itemView.findViewById(R.id.delete_button);
             duplicateBtn = itemView.findViewById(R.id.duplicate_button);
-            renameBtn = itemView.findViewById(R.id.rename_button);
             titleTv = itemView.findViewById(R.id.title);
 
-            renameBtn.setOnClickListener(handleRename());
             openBtn.setOnClickListener(handleOpen());
             deleteBtn.setOnClickListener(handleDelete());
             duplicateBtn.setOnClickListener(handleDuplicate());
         }
 
-        private View.OnClickListener handleOpen(){
+        private View.OnClickListener handleOpen() {
             return new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mClickListener != null) mClickListener.onOpenListClick(getAdapterPosition());
+                    if (mClickListener != null)
+                        mClickListener.onOpenListClick(getAdapterPosition());
                 }
             };
         }
 
-        private View.OnClickListener handleDelete(){
+        private View.OnClickListener handleDelete() {
             return new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mClickListener != null) mClickListener.onDeleteListClick(getAdapterPosition());
+                    if (mClickListener != null)
+                        mClickListener.onDeleteListClick(getAdapterPosition());
                 }
             };
         }
 
-        private View.OnClickListener handleDuplicate(){
+        private View.OnClickListener handleDuplicate() {
             return new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mClickListener != null) mClickListener.onDuplicateListClick(getAdapterPosition());
-                }
-            };
-        }
-
-        private View.OnClickListener handleRename(){
-            return new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mClickListener != null) mClickListener.onRenameListClick(getAdapterPosition());
+                    if (mClickListener != null)
+                        mClickListener.onDuplicateListClick(getAdapterPosition());
                 }
             };
         }
@@ -112,8 +101,9 @@ public class ShoppingListsAdapter extends RecyclerView.Adapter<ShoppingListsAdap
      */
     public interface ItemClickListener {
         void onOpenListClick(int position);
+
         void onDeleteListClick(int position);
+
         void onDuplicateListClick(int position);
-        void onRenameListClick(int position);
     }
 }
