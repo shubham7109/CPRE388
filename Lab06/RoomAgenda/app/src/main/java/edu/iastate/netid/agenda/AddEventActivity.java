@@ -67,7 +67,7 @@ public class AddEventActivity extends AppCompatActivity {
         TimePicker endTime = findViewById(R.id.endTimeInput);
         EditText detailText = findViewById(R.id.detailsInput);
 
-        //TODO - create an event object using UI variables above. Use below helper method
+        //create an event object using UI variables above. Use below helper method
         // formatDateTime() to format date strings
         String startTimeString = formatDateTime(
                 startDate.getMonth(),
@@ -90,7 +90,7 @@ public class AddEventActivity extends AppCompatActivity {
                                 endTimeString,
                                 detailText.getText().toString());
 
-        //TODO - insert your newly created event into the database
+        //insert your newly created event into the database
         database.eventDao().insertEvent(event);
 
         // Redirect to main activity

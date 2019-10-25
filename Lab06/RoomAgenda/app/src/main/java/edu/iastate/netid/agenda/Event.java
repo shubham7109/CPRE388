@@ -15,7 +15,7 @@ import java.util.Locale;
 @Entity(tableName = "event")
 public class Event {
 
-    //TODO - create event attributes for a uid(int) that autogenerates, title(string), location(string), startTime(string), endTime(string), and details(string)
+    //create event attributes for a uid(int) that autogenerates, title(string), location(string), startTime(string), endTime(string), and details(string)
     @PrimaryKey(autoGenerate = true)
     public int uid;
 
@@ -42,7 +42,7 @@ public class Event {
      */
     public Event(String title, String location, String startTime,
                  String endTime, String details) {
-        //TODO - assign the passed in variables to the corresponding private variables in this class
+        //assign the passed in variables to the corresponding private variables in this class
         this.title = title;
         this.location = location;
         this.startTime = startTime;
@@ -55,9 +55,7 @@ public class Event {
      */
     public Event() { }
 
-
-
-    //TODO - create getters and setters for all the above mentioned private variables
+    //create getters and setters for all the above mentioned private variables
 
     public int getUid() {
         return uid;
@@ -107,8 +105,6 @@ public class Event {
         this.details = details;
     }
 
-
-    //TODO - uncomment the below methods once you have created the above variables
     /**
      * Returns the end time in the form of a Date object
      */
