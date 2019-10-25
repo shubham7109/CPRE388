@@ -69,10 +69,29 @@ public class AddEventActivity extends AppCompatActivity {
 
         //TODO - create an event object using UI variables above. Use below helper method
         // formatDateTime() to format date strings
+        String startTimeString = formatDateTime(
+                startDate.getMonth(),
+                startDate.getDayOfMonth(),
+                startDate.getYear(),
+                startTime.getHour(),
+                startTime.getMinute());
 
+        String endTimeString = formatDateTime(
+                endDate.getMonth(),
+                endDate.getDayOfMonth(),
+                endDate.getYear(),
+                endTime.getHour(),
+                endTime.getMinute());
+
+
+        Event event = new Event(titleText.getText().toString(),
+                                locText.getText().toString(),
+                                startTimeString,
+                                endTimeString,
+                                detailText.getText().toString());
 
         //TODO - insert your newly created event into the database
-
+        database.eventDao().insertEvent(event);
 
         // Redirect to main activity
         Intent homeIntent = new Intent(this, EventListActivity.class);

@@ -40,6 +40,10 @@ public class EventListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //TODO - get the selected event's id and pass as an extra in an Intent to start
                 // EventDetailsActivity.class
+                Intent myIntent = new Intent(EventListActivity.this, EventDetailsActivity.class);
+                int uid = eventList.get(i).getUid();
+                myIntent.putExtra("uid", uid );
+                startActivity(myIntent);
 
             }
         });
@@ -50,12 +54,18 @@ public class EventListActivity extends AppCompatActivity {
         super.onResume();
 
         //TODO - assign a list of all the events retrieved from database.eventDao().getAll() method to eventList
-
+        eventList = database.eventDao().getAll();
 
         //TODO - delete old events before they are displayed by the list adapter.
         // Use getEndTimeAsDate and Date's before() to do the comparison. Note that
         // the default constructor of Date creates a Date for the current instant.
+        for(Event event : eventList){
+            if (event.getEndTimeAsDate().before(new Date())){
+                database.eventDao().delete(event);
+            }
+        }
 
+        eventList = database.eventDao().getAll();
 
         // Set source of ListView to List of Events in database
         ArrayAdapter<Event> adapter = new ArrayAdapter<>(this,

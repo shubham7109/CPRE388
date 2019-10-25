@@ -3,6 +3,7 @@ package edu.iastate.netid.agenda;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,14 +24,19 @@ public class EventDetailsActivity extends AppCompatActivity {
         database = AppDatabase.getAppDatabase(this);
 
         //TODO - get the ID passed from the EventListActivity
+        int uid = getIntent().getIntExtra("uid",-99);
+        if(uid == -99){
+            Toast.makeText(this, "Error getting event", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
         //TODO - query the database to get the user selected event using the id passed from above Intent
-
+        Event selectedEvent = database.eventDao().findByID(uid);
 
         //Set views to reflect event data
         //TODO - uncomment the below code block once you write the code above
-        /*TextView temp = findViewById(R.id.titleOutput);
+        TextView temp = findViewById(R.id.titleOutput);
         temp.setText(selectedEvent.getTitle());
 
         temp = findViewById(R.id.locationOutput);
@@ -43,7 +49,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         temp.setText(selectedEvent.getEndTime());
 
         temp = findViewById(R.id.deetsOutput);
-        temp.setText(selectedEvent.getDetails());*/
+        temp.setText(selectedEvent.getDetails());
     }
 
     @Override
