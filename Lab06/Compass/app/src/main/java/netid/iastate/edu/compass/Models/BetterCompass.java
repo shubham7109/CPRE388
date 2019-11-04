@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import netid.iastate.edu.compass.Interfaces.SensorUpdateCallback;
 
@@ -78,8 +79,10 @@ public class BetterCompass implements SensorEventListener {
 
 
         // Get orientation from magnetometer and accelerometer
-        float orientation = (float) (-mOrientationAngles[0] * 180 / Math.PI);
+        float orientation = (float) (-mOrientationAngles[0] * 180.0f / Math.PI);
+        //orientation = 10*(Math.round(orientation/10));
 
+        Log.e("Orientation: ", String.valueOf(orientation));
         mCallback.update(orientation);//use callback to call update() method in the activity
     }
 

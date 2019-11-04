@@ -53,22 +53,41 @@ public class TiltActivity extends AppCompatActivity implements SensorUpdateCallb
         mTilt.stop();
     }
 
+    private  int counter = 0;
+    private  float avg = 0;
+    private final  static  int NUM_ITEMS = 5;
+
     @Override
     public void update(float orientation) {
-        // Rotate arrow to orientation
-        RotateAnimation rotateAnimation = new RotateAnimation(
-                currentDegree,
-                orientation,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
 
-        rotateAnimation.setDuration(100);
-        rotateAnimation.setFillAfter(true);
+        //Wait for update to be called multiple times
+        if(counter < NUM_ITEMS){
+            avg = avg + orientation;
+            counter++;
+        }
+        else{
 
-        // Start the animation
-        mArrow.startAnimation(rotateAnimation);
-        currentDegree = orientation;
+            orientation = avg/NUM_ITEMS;
+            avg =0;
+            counter = 0;
+
+            //mArrow.setRotation(orientation);
+
+            // Rotate to orientation
+            RotateAnimation rotateAnimation = new RotateAnimation(
+                    currentDegree,
+                    orientation,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f);
+
+            rotateAnimation.setDuration(1000);
+            rotateAnimation.setFillAfter(true);
+
+            // Start the animation
+            mArrow.startAnimation(rotateAnimation);
+            currentDegree = orientation;
+        }
 
     }
 
