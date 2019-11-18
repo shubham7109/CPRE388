@@ -237,13 +237,13 @@ public class ChatModel {
         AcceptThread() {
             BluetoothServerSocket tmp = null;
             try {
-                //TODO: use bluetoothAdapter to create a listenUsingInsecureRfcommWithServiceRecord using APP_NAME and MY_UUID and assign the result to the temporary bluetooth socket
+                //use bluetoothAdapter to create a listenUsingInsecureRfcommWithServiceRecord using APP_NAME and MY_UUID and assign the result to the temporary bluetooth socket
                 tmp = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(APP_NAME,MY_UUID);
                 //create a insecure listening BT socket
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            //TODO: now assign the temporary bluetooth socket to the bluetooth server socket
+            //now assign the temporary bluetooth socket to the bluetooth server socket
             serverSocket = tmp;
         }
 
@@ -253,7 +253,7 @@ public class ChatModel {
             BluetoothSocket socket;
             while (state != STATE_CONNECTED) {
                 try {
-                    //TODO: listen for connections by calling the server socket's accept() method,
+                    //listen for connections by calling the server socket's accept() method,
                     // and assign the returned BluetoothSocket to socket
                     socket = serverSocket.accept();
 
@@ -289,7 +289,7 @@ public class ChatModel {
          * closes the serverSocket
          */
         void cancel() {
-            //TODO - close the serverSocket, will need to be surrounded with a try/catch
+            // close the serverSocket, will need to be surrounded with a try/catch
 
         }
     }
@@ -315,7 +315,7 @@ public class ChatModel {
             this.device = device;
 
             try {
-                //TODO: use device to create a RfcommSocketToServiceRecord using MY_UUID and assign the result to the temporary bluetooth socket
+                //use device to create a RfcommSocketToServiceRecord using MY_UUID and assign the result to the temporary bluetooth socket
                 // Get a BluetoothSocket to connect with the given BluetoothDevice.
                 // MY_UUID is the app's UUID string, also used in the server code.
                 tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
@@ -323,7 +323,7 @@ public class ChatModel {
             } catch (IOException e) {
                 Log.e(TAG, "Socket's create() method failed", e);
             }
-            //TODO: now assign the temporary bluetooth socket to our private final BluetoothSocket
+            //now assign the temporary bluetooth socket to our private final BluetoothSocket
             socket = tmp;
         }
 
@@ -331,7 +331,7 @@ public class ChatModel {
         public void run() {
             setName("ConnectThread");
 
-            // TODO - Always cancel the bluetooth adapter discovery because it will slow down a connection
+            //  Always cancel the bluetooth adapter discovery because it will slow down a connection
             bluetoothAdapter.cancelDiscovery();
 
             // Make a connection to the BluetoothSocket
@@ -359,7 +359,7 @@ public class ChatModel {
          * Closes the connection to the remote device
          */
         void cancel() {
-            //TODO - close() the socket, will need to be surrounded with a try/catch
+            // close() the socket, will need to be surrounded with a try/catch
             try {
                 socket.close();
             } catch (IOException e) {
@@ -391,15 +391,15 @@ public class ChatModel {
             OutputStream tmpOut = null;
 
             try {
-                //TODO: use the passed in socket, get the input stream and the output stream and assign them to tmpIn and tmpOut respectively
+                //use the passed in socket, get the input stream and the output stream and assign them to tmpIn and tmpOut respectively
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
 
             } catch (IOException e) {
             }
 
-            //TODO: assign the temporary input stream to inputStream
-            // TODO: assign the temporary output stream to outputStream
+            //assign the temporary input stream to inputStream
+            // assign the temporary output stream to outputStream
             inputStream = tmpIn;
             outputStream = tmpOut;
 
@@ -413,7 +413,7 @@ public class ChatModel {
             // Keep listening to the InputStream
             while (true) {
                 try {
-                    // TODO: Read from the InputStream by passing in the buffer and assigning the result to the bytes variable
+                    // Read from the InputStream by passing in the buffer and assigning the result to the bytes variable
                     bytes = inputStream.read(buffer);
 
                     // Send the obtained bytes to the UI Activity
@@ -435,7 +435,7 @@ public class ChatModel {
          */
         void write(byte[] buffer) {
             try {
-                //TODO - write the passed in buffer message to outputStream
+                //write the passed in buffer message to outputStream
                 outputStream.write(buffer);
 
                 handler.obtainMessage(BluetoothActivity.MESSAGE_WRITE, -1, -1,
@@ -448,7 +448,7 @@ public class ChatModel {
          * Closes the bluetooth socket
          */
         void cancel() {
-            //TODO: close() the bluetoothSocket, will need to be surrounded with a try/catch
+            //close() the bluetoothSocket, will need to be surrounded with a try/catch
             try {
                 bluetoothSocket.close();
             } catch (IOException e) {

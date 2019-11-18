@@ -103,7 +103,7 @@ public class BluetoothActivity extends AppCompatActivity {
      * @param view the instance of the voice to text button
      */
     public void voiceToTextClicked(View view){
-        //TODO -  create and use an intent for speech to text
+        //create and use an intent for speech to text
         // Create an intent that can start the Speech Recognizer activity
         // Start the activity, the intent will be populated with the speech text
 
@@ -307,7 +307,7 @@ public class BluetoothActivity extends AppCompatActivity {
                     Toast.makeText(this, "Bluetooth still disabled, turn off application!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
-                //TODO - use the SPEECH_REQUEST_CODE to check if a speech to text result has been returned, if it has then get the result text and put it into the inputField
+                //use the SPEECH_REQUEST_CODE to check if a speech to text result has been returned, if it has then get the result text and put it into the inputField
             case SPEECH_REQUEST_CODE: {
                 if (resultCode == RESULT_OK && null != data) {
 
@@ -367,7 +367,10 @@ public class BluetoothActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //TODO: if we have a chat model, then stop it
+        //if we have a chat model, then stop it
+        if(chatModel != null && chatModel.getState() == ChatModel.STATE_CONNECTED){
+            chatModel.stop();
+        }
 
     }
 
