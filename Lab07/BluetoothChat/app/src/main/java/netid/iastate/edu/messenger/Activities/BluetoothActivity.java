@@ -106,6 +106,14 @@ public class BluetoothActivity extends AppCompatActivity {
         //TODO -  create and use an intent for speech to text
         // Create an intent that can start the Speech Recognizer activity
         // Start the activity, the intent will be populated with the speech text
+
+        final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getCallingPackage());
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1000);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice your input here");
+        startActivityForResult(intent,SPEECH_REQUEST_CODE);
     }
 
 
@@ -300,6 +308,16 @@ public class BluetoothActivity extends AppCompatActivity {
                     finish();
                 }
                 //TODO - use the SPEECH_REQUEST_CODE to check if a speech to text result has been returned, if it has then get the result text and put it into the inputField
+            case SPEECH_REQUEST_CODE: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    inputField.setText(result.get(0));
+                }
+                break;
+            }
+
 
         }
         super.onActivityResult(requestCode, resultCode, data);
