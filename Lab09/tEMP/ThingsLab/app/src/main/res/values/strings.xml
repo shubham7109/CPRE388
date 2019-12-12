@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ThingsLab</string>
+    <string name="on_button">ON</string>
+    <string name="off_button">OFF</string>
+    <string name="auto_button">AUTO</string>
+
+    <string name="temperature_string">%1$d\u00b0C</string>
+</resources>
